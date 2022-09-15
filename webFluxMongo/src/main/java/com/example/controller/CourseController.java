@@ -1,10 +1,8 @@
-package com.example.webfluxmongo.controller;
+package com.example.controller;
 
 
-import com.example.webfluxmongo.dto.CourseDTORequest;
-import com.example.webfluxmongo.dto.CourseDTOResponse;
-import com.example.webfluxmongo.entity.Course;
-import com.example.webfluxmongo.service.CourseService;
+import com.example.entity.Course;
+import com.example.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -71,14 +69,16 @@ public class CourseController {
     }
 
     @DeleteMapping(path = "/courses/{id}/students")
-    public Mono<Void> removeStudentFromTheCourseByName(@RequestParam(name = "names",required = false) List<String> names,
+    public Mono<ResponseEntity<Void>>  removeStudentFromTheCourseByName(@RequestParam(name = "names",required = false) List<String> names,
                                                        @PathVariable(name = "id") String id) {
         return courseService.removeStudentsFromTheCourse(names,id);
 
     }
 
     @PutMapping(path = "/courses/{id}/toggle-course")
-    public Mono<Void> toggleCourse(@PathVariable(name = "id") String id) {
+    public Mono<ResponseEntity<Void>> toggleCourse(@PathVariable(name = "id") String id) {
+
+        return courseService.toggleCourse(id);
 
     }
 

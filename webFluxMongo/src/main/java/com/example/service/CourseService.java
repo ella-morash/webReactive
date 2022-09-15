@@ -1,8 +1,6 @@
-package com.example.webfluxmongo.service;
+package com.example.service;
 
-import com.example.webfluxmongo.dto.CourseDTORequest;
-import com.example.webfluxmongo.dto.CourseDTOResponse;
-import com.example.webfluxmongo.entity.Course;
+import com.example.entity.Course;
 import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -26,5 +24,7 @@ public interface CourseService {
 
     Flux<String> getAllStudentsOfTheCourse(String id);
 
-    Mono<Void> removeStudentsFromTheCourse(List<String> names, String id);
+    Mono<ResponseEntity<Void>> removeStudentsFromTheCourse(List<String> names, String id);
+
+    Mono<ResponseEntity<Void>> toggleCourse(String id);
 }

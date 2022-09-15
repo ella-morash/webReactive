@@ -1,4 +1,4 @@
-package com.example.webfluxmongo.configuration;
+package com.example.configuration;
 
 import com.mongodb.reactivestreams.client.MongoClient;
 import com.mongodb.reactivestreams.client.MongoClients;
@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.config.AbstractReactiveMongoConfiguratio
 import org.springframework.data.mongodb.repository.config.EnableReactiveMongoRepositories;
 
 @Configuration
-@EnableReactiveMongoRepositories
+@EnableReactiveMongoRepositories(basePackages = "com.example.repository")
 public class MongoReactiveApplication
         extends AbstractReactiveMongoConfiguration {
 

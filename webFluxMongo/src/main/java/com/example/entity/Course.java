@@ -1,4 +1,4 @@
-package com.example.webfluxmongo.entity;
+package com.example.entity;
 
 
 import lombok.AllArgsConstructor;
@@ -9,7 +9,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-@Document
+@Document(collection = "course")
+
 public class Course {
     @Id
     private String id;

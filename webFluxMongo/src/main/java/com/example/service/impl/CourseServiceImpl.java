@@ -1,12 +1,10 @@
-package com.example.webfluxmongo.service.impl;
+package com.example.service.impl;
 
 
-import com.example.webfluxmongo.dto.CourseDTORequest;
-import com.example.webfluxmongo.dto.CourseDTOResponse;
-import com.example.webfluxmongo.entity.Course;
-import com.example.webfluxmongo.repository.CourseRepository;
-import com.example.webfluxmongo.service.CourseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.entity.Course;
+import com.example.repository.CourseRepository;
+import com.example.service.CourseService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,17 +13,15 @@ import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@AllArgsConstructor
 public class CourseServiceImpl implements CourseService {
 
-    @Autowired
-    private CourseRepository courseRepository;
+
+    private final CourseRepository courseRepository;
 
     @Override
     public Mono<Course> createCourse(Course course) {
@@ -118,15 +114,42 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Mono<Void> removeStudentsFromTheCourse(List<String> names, String id) {
+    public Mono<ResponseEntity<Void>> removeStudentsFromTheCourse(List<String> names, String id) {
+
         return courseRepository.findById(id)
                 .flatMap(course -> {
+                    var set = new HashSet<>(names);
                     var students = course.getStudents();
+                    var filtered = students.stream()
+                            .filter(set::add)
+                            .toList();
+                    course.setStudents(filtered);
+                    return courseRepository.save(course);
 
 
-                    });
+                })
+                .map(course -> new ResponseEntity<Void>(HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 
 
-                });
+                }
+
+    @Override
+    public Mono<ResponseEntity<Void>> toggleCourse(String id) {
+        
+        return courseRepository.findById(id)
+                .flatMap(course -> {
+                    if (!course.isClosed()){
+                        course.setClosed(true);
+                    } else {
+                        course.setClosed(false);
+                    }
+                    
+                    return courseRepository.save(course);
+                  
+                })
+                .map(course -> new ResponseEntity<Void>(HttpStatus.OK))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
+
